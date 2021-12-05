@@ -14,10 +14,16 @@ class PostController extends Controller
      */
     public function index()
     {
-        $index = "投稿一覧ページです。";
+        $query = Post::query();
 
-        //show.blade.phpに$textという変数を渡す場合
-        return view('post/index', ['index_view' => $index]);
+        //全件取得
+        $posts = $query->get();
+
+        //ページネーション
+        $posts = $query->orderBy('id','desc')->paginate(10);
+
+        //post/index.blade.phpに$postsという変数を渡す場合
+        return view('post.index')->with('posts',$posts);
     }
 
     /**
@@ -27,9 +33,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        {
-            return '新規投稿ページです';
-        };
+        //createに転送
+        return view('post.create');
     }
 
     /**
@@ -40,8 +45,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //postオブジェクト生成
+        $post = Post::create();
+
+        //値の登録。
+        //右側はviewのnameから持ってきたもの
+        //左側はモデルのカラム名
+        $post->title = $request->title;
+        $post->body = $request->body;
+
+        //保存
+        $post->save();
+
+        //一覧にリダイレクト
+        return redirect()->to('/post/index');
     }
+
 
     /**
      * Display the specified resource.
@@ -49,10 +68,14 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        //postテーブルからレコードを検索
+        $post = Post::find($id);
+        //検索結果をビューに渡す
+        return view('post.show')->with('post',$post);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -60,9 +83,13 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+                //idを受け取る
+    public function edit($id)
     {
-        //
+        //受け取ったidを元にpostテーブルからレコードを検索
+        $post = Post::find($id);
+        //検索結果をビューに渡す
+        return view('post.edit')->with('post',$post);
     }
 
     /**
@@ -72,19 +99,33 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+                                //idを受け取る
+    public function update(Request $request, $id)
     {
-        //
+        //受け取ったidを元にpostテーブルからレコードを検索
+        $post = Post::find($id);
+        //値を代入
+        $post->title = $request->title;
+        $post->body = $request->body;
+        //保存（更新）
+        $post->save();
+        //リダイレクト
+        return redirect()->to('/post/index');
     }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+                //idを受け取る
+    public function destroy($id)
     {
-        //
+        ////受け取ったidを元に削除対象レコードを検索
+        $post = Post::find($id);
+        //削除
+        $post->delete();
+        //リダイレクト
+        return redirect()->to('/post/index');
     }
 }
