@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
    <h1>一覧表示</h1>
   <!-- 新規投稿 -->

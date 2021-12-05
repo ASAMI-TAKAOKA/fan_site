@@ -11,7 +11,7 @@
     </div>
 
     <!-- form -->
-    <form method="post" action="/post/update">
+    <form method="post" action="/post/update/{{ $post->id }}">
 
         <div class="form-group">
             <label>タイトル</label>

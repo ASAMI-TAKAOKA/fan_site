@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\PostController::class, 'index'])->name('home');
 Route::get('/post/index', [App\Http\Controllers\PostController::class, 'index'])->name('index');
 Route::get('/post/show/{id}', [App\Http\Controllers\PostController::class, 'show'])->name('show');
 Route::get('/post/edit/{id}', [App\Http\Controllers\PostController::class, 'edit'])->name('edit');
